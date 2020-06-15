@@ -4,11 +4,6 @@ import (
 	"gonum.org/v1/gonum/mat"
 )
 
-func dSigmoid(x float64) float64 {
-	s := sigmoid(x)
-	return s * (1 - s)
-}
-
 // Back performs a back propagation
 func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 	var prevDelta []float64
@@ -20,7 +15,7 @@ func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 
 		if i == nn.transitionCount-1 {
 			for j := 0; j < layerSize; j++ {
-				delta[j] = (nn.value[i+1].AtVec(j) - desired.AtVec(j)) * dSigmoid(nn.raw[i].AtVec(j))
+				delta[j] = (nn.value[i+1].AtVec(j) - desired.AtVec(j)) * nn.derivative(nn.raw[i].AtVec(j))
 			}
 		} else {
 			prevLayerSize, _ := nn.raw[i+1].Dims()
@@ -32,7 +27,7 @@ func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 					sum += nn.weight[i].At(k, j) * prevDelta[k]
 				}
 
-				delta[j] = sum * dSigmoid(nn.raw[i].AtVec(j))
+				delta[j] = sum * nn.derivative(nn.raw[i].AtVec(j))
 			}
 		}
 

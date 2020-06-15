@@ -11,10 +11,10 @@ func TestForward(t *testing.T) {
 	rand.Seed(0)
 
 	const (
-		actualAnswer = 0.536850925930091
+		actualAnswer = 0.7793750625809166
 	)
 
-	nn, err := NewNeuralNetwork([]int{2, 2, 1})
+	nn, err := NewNeuralNetwork([]int{2, 2, 1}, InitNormal, Sigmoid, DSigmoid)
 	if err != nil {
 		t.Error(err)
 	}

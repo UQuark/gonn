@@ -12,10 +12,10 @@ func TestBackPropagation(t *testing.T) {
 
 	const (
 		desiredAnswer = 0
-		actualAnswer  = 0.0349729990822309
+		actualAnswer  = 0.03477387984894708
 	)
 
-	nn, err := NewNeuralNetwork([]int{2, 2, 1})
+	nn, err := NewNeuralNetwork([]int{2, 2, 1}, InitNormal, Sigmoid, DSigmoid)
 	if err != nil {
 		t.Error(err)
 	}

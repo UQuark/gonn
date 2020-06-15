@@ -2,7 +2,6 @@ package gonn
 
 import (
 	"errors"
-	"math/rand"
 
 	"gonum.org/v1/gonum/mat"
 )
@@ -21,28 +20,21 @@ type NeuralNetwork struct {
 
 	layerCount, transitionCount int
 	backPasses                  int
-}
 
-func initNormal(size int) []float64 {
-	data := make([]float64, size)
-	for i := range data {
-		data[i] = rand.NormFloat64()
-	}
-	return data
-}
-
-func initZero(size int) []float64 {
-	return nil
+	activation, derivative Fx
 }
 
 // NewNeuralNetwork creates a new NeuralNetwork given layers' sizes
-func NewNeuralNetwork(layers []int) (nn *NeuralNetwork, err error) {
+func NewNeuralNetwork(layers []int, init Init, activation, derivative Fx) (nn *NeuralNetwork, err error) {
 	if len(layers) < 2 {
 		err = ErrTooFewLayers
 		return
 	}
 
 	nn = &NeuralNetwork{}
+
+	nn.activation = activation
+	nn.derivative = derivative
 
 	nn.layerCount = len(layers)
 	nn.transitionCount = nn.layerCount - 1
@@ -59,8 +51,8 @@ func NewNeuralNetwork(layers []int) (nn *NeuralNetwork, err error) {
 			return
 		}
 
-		nn.weight[i] = mat.NewDense(layers[i+1], layers[i], initNormal(layers[i+1]*layers[i]))
-		nn.deltaWeight[i] = mat.NewDense(layers[i+1], layers[i], initZero(layers[i+1]*layers[i]))
+		nn.weight[i] = mat.NewDense(layers[i+1], layers[i], init(layers[i+1]*layers[i]))
+		nn.deltaWeight[i] = mat.NewDense(layers[i+1], layers[i], nil)
 		nn.raw[i] = mat.NewVecDense(layers[i+1], nil)
 	}
 

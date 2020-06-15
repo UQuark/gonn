@@ -79,7 +79,7 @@ func check(answer *mat.VecDense, correct byte) (valid bool, confidence float64) 
 func TestMNIST(t *testing.T) {
 	rand.Seed(0)
 
-	nn, err := NewNeuralNetwork([]int{28 * 28, 16, 10})
+	nn, err := NewNeuralNetwork([]int{28 * 28, 16, 10}, InitNormal, Sigmoid, DSigmoid)
 	if err != nil {
 		t.Error(err)
 	}
