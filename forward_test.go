@@ -11,7 +11,7 @@ func TestForward(t *testing.T) {
 	rand.Seed(0)
 
 	const (
-		actualAnswer = 0.7793750625809166
+		actualAnswer = 0.536850925930091
 	)
 
 	nn, err := NewNeuralNetwork([]int{2, 2, 1}, InitNormal, Sigmoid, DSigmoid)
