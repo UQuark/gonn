@@ -24,7 +24,7 @@ func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 				var sum float64
 
 				for k := 0; k < prevLayerSize; k++ {
-					sum += nn.weight[i].At(k, j) * prevDelta.AtVec(k)
+					sum += nn.weight[i+1].At(k, j) * prevDelta.AtVec(k)
 				}
 
 				delta.SetVec(j, sum*nn.derivative(nn.raw[i].AtVec(j)))
