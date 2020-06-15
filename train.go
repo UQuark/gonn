@@ -47,15 +47,12 @@ func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 
 // Nudge changes network's weights based on back propagation
 func (nn *NeuralNetwork) Nudge(learningRate float64) {
+	scalar := learningRate / float64(nn.backPasses)
+	nn.backPasses = 0
+
 	for i := 0; i < nn.transitionCount; i++ {
-		nn.deltaWeight[i].Apply(func(to, from int, v float64) float64 {
-			return learningRate * v / float64(nn.backPasses)
-		}, nn.deltaWeight[i])
-
+		nn.deltaWeight[i].Scale(scalar, nn.deltaWeight[i])
 		nn.weight[i].Sub(nn.weight[i], nn.deltaWeight[i])
-
 		nn.deltaWeight[i].Zero()
 	}
-
-	nn.backPasses = 0
 }
