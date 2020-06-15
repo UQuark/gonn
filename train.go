@@ -6,16 +6,16 @@ import (
 
 // Back performs a back propagation
 func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
-	var prevDelta []float64
+	var prevDelta *mat.VecDense
 
 	for i := nn.transitionCount - 1; i >= 0; i-- {
 		layerSize, _ := nn.raw[i].Dims()
 
-		delta := make([]float64, layerSize)
+		delta := mat.NewVecDense(layerSize, nil)
 
 		if i == nn.transitionCount-1 {
 			for j := 0; j < layerSize; j++ {
-				delta[j] = (nn.value[i+1].AtVec(j) - desired.AtVec(j)) * nn.derivative(nn.raw[i].AtVec(j))
+				delta.SetVec(j, (nn.value[i+1].AtVec(j)-desired.AtVec(j))*nn.derivative(nn.raw[i].AtVec(j)))
 			}
 		} else {
 			prevLayerSize, _ := nn.raw[i+1].Dims()
@@ -24,16 +24,17 @@ func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 				var sum float64
 
 				for k := 0; k < prevLayerSize; k++ {
-					sum += nn.weight[i].At(k, j) * prevDelta[k]
+					sum += nn.weight[i].At(k, j) * prevDelta.AtVec(k)
 				}
 
-				delta[j] = sum * nn.derivative(nn.raw[i].AtVec(j))
+				delta.SetVec(j, sum*nn.derivative(nn.raw[i].AtVec(j)))
 			}
 		}
 
 		nn.deltaWeight[i].Apply(func(to, from int, v float64) float64 {
-			return v + delta[to]*nn.value[i].AtVec(from)
+			return v + delta.AtVec(to)*nn.value[i].AtVec(from)
 		}, nn.deltaWeight[i])
+
 		prevDelta = delta
 	}
 
