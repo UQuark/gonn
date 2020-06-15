@@ -36,6 +36,7 @@ func (nn *NeuralNetwork) GetOutput() *mat.VecDense {
 func (nn *NeuralNetwork) Forward() {
 	for i := 0; i < nn.transitionCount; i++ {
 		nn.raw[i].MulVec(nn.weight[i], nn.value[i])
+		nn.raw[i].AddVec(nn.raw[i], nn.bias[i])
 		for j := 0; j < nn.value[i+1].Len(); j++ {
 			nn.value[i+1].SetVec(j, nn.activation(nn.raw[i].AtVec(j)))
 		}

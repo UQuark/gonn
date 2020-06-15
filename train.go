@@ -35,6 +35,8 @@ func (nn *NeuralNetwork) Back(desired *mat.VecDense) {
 			return v + delta.AtVec(to)*nn.value[i].AtVec(from)
 		}, nn.deltaWeight[i])
 
+		nn.deltaBias[i].AddVec(nn.deltaBias[i], delta)
+
 		prevDelta = delta
 	}
 
@@ -48,7 +50,12 @@ func (nn *NeuralNetwork) Nudge(learningRate float64) {
 
 	for i := 0; i < nn.transitionCount; i++ {
 		nn.deltaWeight[i].Scale(scalar, nn.deltaWeight[i])
+		nn.deltaBias[i].ScaleVec(scalar, nn.deltaBias[i])
+
 		nn.weight[i].Sub(nn.weight[i], nn.deltaWeight[i])
+		nn.bias[i].SubVec(nn.bias[i], nn.deltaBias[i])
+
 		nn.deltaWeight[i].Zero()
+		nn.deltaBias[i].Zero()
 	}
 }

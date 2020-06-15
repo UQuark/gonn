@@ -15,8 +15,8 @@ var (
 
 // NeuralNetwork represents a multi-layer perceptron
 type NeuralNetwork struct {
-	raw, value          []*mat.VecDense
-	weight, deltaWeight []*mat.Dense
+	raw, value, bias, deltaBias []*mat.VecDense
+	weight, deltaWeight         []*mat.Dense
 
 	layerCount, transitionCount int
 	backPasses                  int
@@ -41,7 +41,12 @@ func NewNeuralNetwork(layers []int, init Init, activation, derivative Fx) (nn *N
 
 	nn.weight = make([]*mat.Dense, nn.transitionCount)
 	nn.deltaWeight = make([]*mat.Dense, nn.transitionCount)
+
 	nn.raw = make([]*mat.VecDense, nn.transitionCount)
+
+	nn.bias = make([]*mat.VecDense, nn.transitionCount)
+	nn.deltaBias = make([]*mat.VecDense, nn.transitionCount)
+
 	nn.value = make([]*mat.VecDense, nn.layerCount)
 
 	for i := 0; i < nn.transitionCount; i++ {
@@ -53,7 +58,11 @@ func NewNeuralNetwork(layers []int, init Init, activation, derivative Fx) (nn *N
 
 		nn.weight[i] = mat.NewDense(layers[i+1], layers[i], init(layers[i+1]*layers[i]))
 		nn.deltaWeight[i] = mat.NewDense(layers[i+1], layers[i], nil)
+
 		nn.raw[i] = mat.NewVecDense(layers[i+1], nil)
+
+		nn.bias[i] = mat.NewVecDense(layers[i+1], init(layers[i+1]))
+		nn.deltaBias[i] = mat.NewVecDense(layers[i+1], nil)
 	}
 
 	for i := 0; i < nn.layerCount; i++ {
