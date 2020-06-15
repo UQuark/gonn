@@ -8,13 +8,12 @@ import (
 )
 
 func TestBackPropagation(t *testing.T) {
+	rand.Seed(0)
+
 	const (
 		desiredAnswer = 0
-		actualAnswer  = 0.03477387984894708
-		seed          = 0
+		actualAnswer  = 0.0349729990822309
 	)
-
-	rand.Seed(seed)
 
 	nn, err := NewNeuralNetwork([]int{2, 2, 1})
 	if err != nil {

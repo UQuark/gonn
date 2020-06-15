@@ -8,12 +8,11 @@ import (
 )
 
 func TestForward(t *testing.T) {
-	const (
-		actualAnswer = 0.7793750625809166
-		seed         = 0
-	)
+	rand.Seed(0)
 
-	rand.Seed(seed)
+	const (
+		actualAnswer = 0.536850925930091
+	)
 
 	nn, err := NewNeuralNetwork([]int{2, 2, 1})
 	if err != nil {

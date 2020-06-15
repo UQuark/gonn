@@ -3,6 +3,7 @@ package gonn
 import (
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"testing"
 
@@ -76,6 +77,8 @@ func check(answer *mat.VecDense, correct byte) (valid bool, confidence float64) 
 }
 
 func TestMNIST(t *testing.T) {
+	rand.Seed(0)
+
 	nn, err := NewNeuralNetwork([]int{28 * 28, 16, 10})
 	if err != nil {
 		t.Error(err)
@@ -85,6 +88,9 @@ func TestMNIST(t *testing.T) {
 		MNISTTrainingLabels = "mnist/train-labels-idx1-ubyte"
 		MNISTTrainingImages = "mnist/train-images-idx3-ubyte"
 		MNISTTrainingLength = 60000
+
+		MaxLoop        = 155000
+		DesiredPercent = 85
 	)
 
 	labels, images, err := mnist(MNISTTrainingLabels, MNISTTrainingImages, MNISTTrainingLength)
@@ -97,7 +103,7 @@ func TestMNIST(t *testing.T) {
 	i := 0
 	lastPercent := 0
 
-	for true {
+	for lastPercent < DesiredPercent && total <= MaxLoop {
 		i %= MNISTTrainingLength
 
 		input := mat.NewVecDense(28*28, images[i])
@@ -123,5 +129,9 @@ func TestMNIST(t *testing.T) {
 		nn.Nudge(.5)
 
 		i++
+	}
+
+	if lastPercent < DesiredPercent {
+		t.Error()
 	}
 }
