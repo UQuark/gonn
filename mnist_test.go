@@ -71,7 +71,7 @@ func check(answer *mat.VecDense, correct byte) (valid bool, confidence float64) 
 	}
 
 	confidence = max
-	valid = (maxPos == int(correct))
+	valid = maxPos == int(correct)
 
 	return
 }
@@ -89,8 +89,8 @@ func TestMNIST(t *testing.T) {
 		MNISTTrainingImages = "mnist/train-images-idx3-ubyte"
 		MNISTTrainingLength = 60000
 
-		MaxLoop        = 155000
-		DesiredPercent = 85
+		MaxLoop        = 355000
+		DesiredPercent = 99
 	)
 
 	labels, images, err := mnist(MNISTTrainingLabels, MNISTTrainingImages, MNISTTrainingLength)

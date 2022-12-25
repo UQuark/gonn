@@ -20,7 +20,7 @@ func InitNormal(size int) []float64 {
 	return data
 }
 
-// InitZero initalizes weights with zeros
+// InitZero initializes weights with zeros
 func InitZero(size int) []float64 {
 	return nil
 }

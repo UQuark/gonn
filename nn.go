@@ -8,9 +8,9 @@ import (
 
 var (
 	// ErrTooFewLayers - at least 2 layers must be present in a NeuralNetwork
-	ErrTooFewLayers = errors.New("At least 2 layers must be present in a NeuralNetwork")
+	ErrTooFewLayers = errors.New("at least 2 layers must be present in a NeuralNetwork")
 	// ErrTooSmallLayer - at least 1 neuron must be present on a layer
-	ErrTooSmallLayer = errors.New("At least 1 neuron must be present on a layer")
+	ErrTooSmallLayer = errors.New("at least 1 neuron must be present on a layer")
 )
 
 // NeuralNetwork represents a multi-layer perceptron

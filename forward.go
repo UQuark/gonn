@@ -8,7 +8,7 @@ import (
 
 var (
 	// ErrSizeMismatch - data size mismatch
-	ErrSizeMismatch = errors.New("Data size mismatch")
+	ErrSizeMismatch = errors.New("data size mismatch")
 )
 
 // SetInput sets input values. Values are copied.
